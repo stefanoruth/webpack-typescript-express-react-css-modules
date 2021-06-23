@@ -17,3 +17,8 @@ declare module '*.jpg' {
     const content: ResponsiveImage
     export default content
 }
+
+declare module '*.svg' {
+    const value: string
+    export default value
+}

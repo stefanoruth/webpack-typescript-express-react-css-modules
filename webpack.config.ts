@@ -51,7 +51,6 @@ const client: webpack.Configuration = {
                 test: /\.scss$/i,
                 use: [
                     MiniCssExtractPlugin.loader,
-
                     {
                         loader: 'css-loader',
                         options: {
@@ -71,6 +70,10 @@ const client: webpack.Configuration = {
                         },
                     },
                 ],
+            },
+            {
+                test: /\.(ico|svg)$/i,
+                use: [{ loader: 'file-loader' }],
             },
         ],
     },
@@ -94,8 +97,7 @@ const client: webpack.Configuration = {
     },
     plugins: [
         ...(base.plugins || []),
-        new LoadablePlugin(),
-        new WebpackManifestPlugin() as any,
+        new LoadablePlugin() as any,
         new MiniCssExtractPlugin({
             filename: isProduction ? '[name].[hash].css' : '[name].dev.css',
             chunkFilename: isProduction ? '[name].[hash].css' : '[name].dev.css',
@@ -122,8 +124,45 @@ const server: webpack.Configuration = {
         rules: [
             ...(base.module?.rules || []),
             {
-                test: /\.(scss|jpe?g|png|webp)$/i,
-                use: [{ loader: 'ignore-loader' }],
+                test: /\.scss$/i,
+                use: [
+                    {
+                        loader: MiniCssExtractPlugin.loader,
+                        options: {
+                            emit: false,
+                        },
+                    },
+                    {
+                        loader: 'css-loader',
+                        options: {
+                            modules: true,
+                        },
+                    },
+                    { loader: 'sass-loader' },
+                ],
+            },
+            {
+                test: /\.(jpe?g|png|webp)$/i,
+                use: [
+                    {
+                        loader: 'responsive-loader',
+                        options: {
+                            esModule: true,
+                            emitFile: false,
+                        },
+                    },
+                ],
+            },
+            {
+                test: /\.(ico|svg)$/i,
+                use: [
+                    {
+                        loader: 'file-loader',
+                        options: {
+                            emitFile: false,
+                        },
+                    },
+                ],
             },
         ],
     },
@@ -135,6 +174,10 @@ const server: webpack.Configuration = {
     },
     plugins: [
         ...(base.plugins || []),
+        new MiniCssExtractPlugin({
+            filename: isProduction ? '[name].[hash].css' : '[name].dev.css',
+            chunkFilename: isProduction ? '[name].[hash].css' : '[name].dev.css',
+        }),
         new webpack.optimize.LimitChunkCountPlugin({
             maxChunks: 1,
         }),

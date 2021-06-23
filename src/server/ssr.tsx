@@ -27,11 +27,11 @@ export const ssr = (): RequestHandler => (req, res, next) => {
                 <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
                 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
                 <title>Document</title>
-                {extractor.getStyleElements()}
                 {extractor.getLinkElements()}
             </head>
             <body>
                 <div id="app" dangerouslySetInnerHTML={{ __html: app }} />
+                {extractor.getStyleElements()}
                 {extractor.getScriptElements()}
             </body>
         </html>

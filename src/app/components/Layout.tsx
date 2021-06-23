@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import Logo from '../../assets/logo.svg'
 
 export const Layout: React.FunctionComponent = props => {
     return (
@@ -15,6 +16,7 @@ export const Layout: React.FunctionComponent = props => {
                     <Link to="/404">404</Link>
                 </li>
             </ul>
+            <img src={Logo} alt="logo" />
             <div>{props.children}</div>
         </div>
     )
